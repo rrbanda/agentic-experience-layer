@@ -6,12 +6,13 @@ import {
   Layout, Box
 } from 'lucide-react';
 
-const AIWorkspace = () => {
+const AIWorkspace = ({ persona = 'Developer' }) => {
   const [activeTools, setActiveTools] = useState([]); // Start empty
   const [showAssistantLibrary, setShowAssistantLibrary] = useState(false);
   const [showTemplateManager, setShowTemplateManager] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [templateName, setTemplateName] = useState('');
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true); // First-time user guide
 
   // Web-Based IDEs (Coding Environments)
   const webIDEs = [
@@ -351,8 +352,13 @@ const AIWorkspace = () => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">AI Workspace</h1>
             <p className="text-sm text-gray-600 mt-1">
-              IDEs + AI assistants working together with unified enterprise context
+              All tools get the same enterprise context (GitHub, Jira, RBAC, policies) automatically
             </p>
+            <div className="mt-2 flex items-center gap-2 text-xs bg-blue-50 border border-blue-200 rounded px-3 py-1.5 inline-flex">
+              <span className="text-blue-700">
+                <strong>Why this?</strong> Stop switching windows and repeating yourself. Your AI tools finally work together.
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -377,28 +383,80 @@ const AIWorkspace = () => {
               <span className="text-sm font-medium text-gray-700">Templates</span>
             </button>
 
-            {/* Save Current Workspace */}
-            {activeTools.length > 0 && (
-              <button 
-                onClick={() => setShowTemplateManager(true)}
-                className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                <span className="text-sm font-medium">Save Workspace</span>
-              </button>
-            )}
+            {/* Save Current Workspace - Always visible */}
+            <button 
+              onClick={() => setShowTemplateManager(true)}
+              disabled={activeTools.length === 0}
+              className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-400"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="text-sm font-medium">Save Workspace</span>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Context Banner */}
+      {/* First-Time User Welcome Banner */}
+      {showWelcomeBanner && (
+        <div className="bg-gradient-to-r from-emerald-50 to-blue-50 border-b border-emerald-200 px-6 py-4">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="w-5 h-5 text-emerald-600" />
+                <h3 className="text-sm font-semibold text-emerald-900">
+                  New to AI Workspace? Here's how it works:
+                </h3>
+              </div>
+              <div className="text-xs text-gray-700 space-y-1">
+                <div>
+                  <strong>1. Browse Library</strong> to discover IDEs and AI assistants (public like Claude, or custom like Security Agent)
+                </div>
+                <div>
+                  <strong>2. Load a Template</strong> for quick-start workflows based on your role (PM, Developer, Platform Engineer)
+                </div>
+                <div>
+                  <strong>3. All tools work together</strong> with unified AEP context (GitHub, Jira, RBAC, policies) automatically
+                </div>
+              </div>
+              <button
+                onClick={() => setShowTemplateManager(true)}
+                className="mt-3 px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs font-medium"
+              >
+                Load Template to Get Started
+              </button>
+            </div>
+            <button
+              onClick={() => setShowWelcomeBanner(false)}
+              className="ml-4 p-1 hover:bg-white hover:bg-opacity-50 rounded transition-colors"
+            >
+              <X className="w-4 h-4 text-gray-600" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Context Banner with Live Sync Indicator */}
       <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
-        <div className="flex items-center gap-2 text-sm">
-          <Zap className="w-4 h-4 text-blue-600" />
-          <span className="font-medium text-blue-900">AEP Context Active:</span>
-          <span className="text-blue-700">
-            All IDEs and assistants have access to your GitHub repos, Jira backlog, architecture docs, and security policies
-          </span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm">
+            <div className="relative">
+              <Zap className="w-4 h-4 text-blue-600" />
+              <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+            <span className="font-medium text-blue-900">AEP Context Active:</span>
+            <span className="text-blue-700">
+              All IDEs and assistants have access to your GitHub repos, Jira backlog, architecture docs, and security policies
+            </span>
+          </div>
+          <div className="flex items-center gap-3 text-xs">
+            <div className="flex items-center gap-1.5 bg-green-100 text-green-800 px-2 py-1 rounded">
+              <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
+              <span>Context synced</span>
+            </div>
+            <span className="text-gray-600">
+              payment-service repo • STORY-234 • Sprint 47
+            </span>
+          </div>
         </div>
       </div>
 
@@ -417,6 +475,22 @@ const AIWorkspace = () => {
                   <p className="text-sm text-gray-600 mt-1">
                     IDEs + Assistants for your workspace • {filteredAssistants.length} available
                   </p>
+                  {!searchQuery && (
+                    <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                      <div className="text-xs font-semibold text-emerald-900 mb-1">
+                        {persona.includes('Product Manager') ? '💡 Popular for PMs:' :
+                         persona.includes('Platform Engineer') ? '💡 Popular for Platform Engineers:' :
+                         '💡 Popular for Developers:'}
+                      </div>
+                      <div className="text-xs text-emerald-800">
+                        {persona.includes('Product Manager') ? 
+                          'ACP, Claude, Gemini' :
+                         persona.includes('Platform Engineer') ? 
+                          'K8s RBAC Specialist, Cloud Cost Optimizer, IntelliJ' :
+                          'VS Code (Web), ACP, Security Review Agent'}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <button 
                   onClick={() => setShowAssistantLibrary(false)}
@@ -675,20 +749,23 @@ const AIWorkspace = () => {
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-gray-200 bg-gray-50">
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-600">
-                  <span className="font-medium">{activeTools.length}/3</span> assistants in your workspace
-                </div>
-                <button
-                  onClick={() => setShowAssistantLibrary(false)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                >
-                  Done
-                </button>
-              </div>
-            </div>
+                    {/* Modal Footer */}
+                    <div className="p-4 border-t border-gray-200 bg-gray-50">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-600">
+                          <span className="font-medium">{activeTools.length}/3</span> assistants in your workspace
+                          <span className="ml-2 text-xs text-gray-500">
+                            (3 panels recommended for optimal screen space)
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setShowAssistantLibrary(false)}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        >
+                          Done
+                        </button>
+                      </div>
+                    </div>
           </div>
         </div>
       )}
@@ -756,12 +833,13 @@ const AIWorkspace = () => {
                 </div>
               )}
 
-              {/* My Templates */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  My Templates
-                  <span className="text-sm font-normal text-gray-600">({myTemplates.length})</span>
-                </h3>
+                      {/* My Templates */}
+                      <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                          My Templates
+                          <span className="text-sm font-normal text-gray-600">({myTemplates.length})</span>
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-4">Templates you've saved for quick reuse</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {myTemplates.map((template) => (
                     <div key={template.id} className="card-elevated p-5 hover:shadow-lg transition-all">
@@ -797,13 +875,14 @@ const AIWorkspace = () => {
                 </div>
               </div>
 
-              {/* Team Templates */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-purple-600" />
-                  Team Templates
-                  <span className="text-sm font-normal text-gray-600">({teamTemplates.length})</span>
-                </h3>
+                      {/* Team Templates */}
+                      <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                          <Users className="w-5 h-5 text-purple-600" />
+                          Team Templates
+                          <span className="text-sm font-normal text-gray-600">({teamTemplates.length})</span>
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-4">Shared by your team members (you can clone and modify)</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {teamTemplates.map((template) => (
                     <div key={template.id} className="card-elevated p-5 hover:shadow-lg transition-all border-l-4 border-purple-500">
@@ -845,13 +924,14 @@ const AIWorkspace = () => {
                 </div>
               </div>
 
-              {/* Suggested Templates */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Bot className="w-5 h-5 text-emerald-600" />
-                  Suggested for You
-                  <span className="text-sm font-normal text-gray-600">({suggestedTemplates.length})</span>
-                </h3>
+                      {/* Suggested Templates */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                          <Bot className="w-5 h-5 text-emerald-600" />
+                          Suggested for You
+                          <span className="text-sm font-normal text-gray-600">({suggestedTemplates.length})</span>
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-4">Based on your role and popular workflows in your organization</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {suggestedTemplates.map((template) => (
                     <div key={template.id} className="card-elevated p-5 hover:shadow-lg transition-all border-l-4 border-emerald-500">
@@ -894,28 +974,70 @@ const AIWorkspace = () => {
       {/* Multi-Panel Workspace */}
       <div className="flex-1 flex gap-4 p-4 overflow-hidden">
         {activeTools.length === 0 ? (
-          /* Empty State */
+          /* Empty State - Persona-Specific */
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center max-w-md">
+            <div className="text-center max-w-2xl">
               <Store className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Your Workspace is Empty</h3>
               <p className="text-gray-600 mb-6">
-                Get started by browsing IDEs & assistants or loading a template
+                Load a template to get started, or build your own workspace
               </p>
+
+              {/* Persona-Specific Quick Start */}
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
+                <div className="text-sm font-semibold text-blue-900 mb-3">
+                  {persona.includes('Product Manager') ? '👋 Recommended for PMs:' :
+                   persona.includes('Platform Engineer') ? '👋 Recommended for Platform Engineers:' :
+                   '👋 Recommended for Developers:'}
+                </div>
+                <div className="text-left bg-white rounded-lg p-4 mb-4">
+                  {persona.includes('Product Manager') ? (
+                    <>
+                      <div className="font-medium text-gray-900 mb-2">Try: PM Ideation Session</div>
+                      <div className="text-sm text-gray-700 mb-3">Claude + ACP + Gemini</div>
+                      <div className="text-xs text-gray-600">
+                        ✓ Validate ideas with Engineering Council<br/>
+                        ✓ Generate cold-start tickets<br/>
+                        ✓ Research competitors
+                      </div>
+                    </>
+                  ) : persona.includes('Platform Engineer') ? (
+                    <>
+                      <div className="font-medium text-gray-900 mb-2">Try: Infrastructure Management</div>
+                      <div className="text-sm text-gray-700 mb-3">K8s RBAC Specialist + Cost Optimizer + Claude</div>
+                      <div className="text-xs text-gray-600">
+                        ✓ Manage RBAC policies safely<br/>
+                        ✓ Optimize cloud costs<br/>
+                        ✓ Architecture guidance
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="font-medium text-gray-900 mb-2">Try: Full-Stack Development</div>
+                      <div className="text-sm text-gray-700 mb-3">VS Code (Web) + ACP + Security Agent</div>
+                      <div className="text-xs text-gray-600">
+                        ✓ Code with full IDE<br/>
+                        ✓ Cold-start tickets ready<br/>
+                        ✓ Security checks built-in
+                      </div>
+                    </>
+                  )}
+                </div>
+                <button
+                  onClick={() => setShowTemplateManager(true)}
+                  className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Load This Template
+                </button>
+              </div>
+
               <div className="flex gap-3 justify-center">
                 <button
                   onClick={() => setShowAssistantLibrary(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Store className="w-4 h-4" />
-                  Browse Library
-                </button>
-                <button
-                  onClick={() => setShowTemplateManager(true)}
                   className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  <Zap className="w-4 h-4" />
-                  Load Template
+                  <Store className="w-4 h-4" />
+                  Or Browse All ({allAssistants.length})
                 </button>
               </div>
             </div>
@@ -967,46 +1089,72 @@ const AIWorkspace = () => {
                       </div>
                       <h3 className="text-white font-semibold mb-2">{tool.name} Ready</h3>
                       <p className="text-gray-400 text-sm mb-4">
-                        Full IDE environment will load here
+                        Full IDE will embed here (iframe or web container)
                       </p>
                       {tool.extensions && (
-                        <div className="flex flex-wrap gap-2 justify-center">
-                          {tool.extensions.map((ext, i) => (
-                            <span key={i} className="text-xs bg-purple-900 bg-opacity-50 text-purple-300 px-2 py-1 rounded">
-                              {ext}
-                            </span>
-                          ))}
+                        <div className="mb-4">
+                          <div className="text-xs text-gray-500 mb-2">AI Extensions Available:</div>
+                          <div className="flex flex-wrap gap-2 justify-center">
+                            {tool.extensions.map((ext, i) => (
+                              <span key={i} className="text-xs bg-purple-900 bg-opacity-50 text-purple-300 px-2 py-1 rounded">
+                                {ext}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       )}
                       <div className="mt-6 p-4 bg-blue-900 bg-opacity-30 rounded-lg text-left">
-                        <div className="text-xs text-blue-300 mb-1">AEP Context Loaded:</div>
+                        <div className="text-xs text-blue-300 mb-1">✓ AEP Context Auto-Loaded:</div>
                         <div className="text-xs text-gray-300">{tool.contextProvided}</div>
                       </div>
-                      <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-                        Launch IDE
-                      </button>
+                      <div className="mt-4 flex gap-2 justify-center">
+                        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                          Launch IDE
+                        </button>
+                        <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium">
+                          Configure
+                        </button>
+                      </div>
+                      <div className="mt-4 text-xs text-gray-500 italic">
+                        (Prototype: Real IDE integration coming soon)
+                      </div>
                     </div>
                   </div>
                 ) : (
                   /* Chat Assistant Panel */
                   <>
-                    <div className="flex-1 overflow-y-auto p-4">
-                      <div className="flex items-center justify-center h-full text-gray-400">
-                        <div className="text-center">
-                          <Icon className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                          <p className="text-sm font-medium text-gray-700">Ready to assist</p>
-                          <p className="text-xs mt-2">Start a conversation - AEP will provide enterprise context automatically</p>
+                    <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center max-w-sm">
+                          <Icon className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                          <p className="text-sm font-semibold text-gray-900 mb-2">
+                            {tool.name} Ready
+                          </p>
+                          <p className="text-xs text-gray-600 mb-4">
+                            Start a conversation. AEP will automatically inject enterprise context.
+                          </p>
+                          <div className="bg-white border border-gray-200 rounded-lg p-3 text-left">
+                            <div className="text-xs text-gray-500 mb-1">Example prompts:</div>
+                            <div className="text-xs text-gray-700 space-y-1">
+                              <div>• "Explain the payment-service architecture"</div>
+                              <div>• "What's blocking STORY-234?"</div>
+                              <div>• "Review my security approach"</div>
+                            </div>
+                          </div>
+                          <div className="mt-4 text-xs text-gray-500 italic">
+                            (Prototype: Chat functionality coming soon)
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Input Area */}
-                    <div className="border-t border-gray-200 p-4">
+                    <div className="border-t border-gray-200 p-4 bg-white">
                       <div className="flex gap-2">
                         <input
                           type="text"
                           placeholder={`Ask ${tool.name}...`}
-                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                         <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                           <ArrowRight className="w-5 h-5" />

@@ -1,159 +1,225 @@
 import React, { useState } from 'react';
 import { 
   Zap, Check, Loader, Clock, Eye, Play, Database, Shield, 
-  GitBranch, Server, Activity, ChevronRight, AlertCircle
+  GitBranch, Server, Activity, ChevronRight, AlertCircle, Target, Bot
 } from 'lucide-react';
 
-const Orchestrations = () => {
+const Orchestrations = ({ persona = 'Product Manager' }) => {
   const [selectedOrch, setSelectedOrch] = useState(null);
 
-  // Active Orchestrations
-  const orchestrations = [
+  // Real orchestrations - what AEP actually does
+  const allOrchestrations = [
+    // PM-initiated: ACP Engineering Council → Jira Tickets
     {
       id: 'orch-001',
-      title: 'Deploy Payment Retry Logic',
-      triggeredBy: 'Alex Chen',
-      tool: 'Cursor IDE',
-      status: 'awaiting-approval',
-      phase: 'Approval Required',
-      startTime: '8 minutes ago',
-      systems: ['GitHub', 'Jenkins', 'OpenShift', 'Datadog'],
-      impact: {
-        services: 1,
-        dependencies: 3,
-        users: '8,400',
-        risk: 'Low'
-      },
-      steps: [
-        {
-          phase: 'Context Analysis',
-          status: 'complete',
-          duration: '0.3s',
-          details: 'Retrieved service graph, dependencies, ownership'
-        },
-        {
-          phase: 'Governance Check',
-          status: 'complete',
-          duration: '0.8s',
-          details: 'RBAC validated, policies checked, compliance verified'
-        },
-        {
-          phase: 'Code & Build',
-          status: 'complete',
-          duration: '2m 14s',
-          details: 'PR created, CI passed, staging deployed'
-        },
-        {
-          phase: 'Approval Gate',
-          status: 'pending',
-          duration: '-',
-          details: 'Awaiting platform team approval'
-        },
-        {
-          phase: 'Production Deploy',
-          status: 'pending',
-          duration: '-',
-          details: 'Blue-green deployment with rollback'
-        }
-      ]
-    },
-    {
-      id: 'orch-002',
-      title: 'Brazil Gateway Integration',
-      triggeredBy: 'Sarah Parker',
-      tool: 'Claude Desktop',
-      status: 'executing',
-      phase: 'Production Deploy',
-      startTime: '23 minutes ago',
-      systems: ['GitHub', 'ArgoCD', 'OpenShift', 'Ansible'],
-      impact: {
-        services: 3,
-        dependencies: 7,
-        users: '2,400',
-        risk: 'Medium'
-      },
-      steps: [
-        {
-          phase: 'Context Analysis',
-          status: 'complete',
-          duration: '0.4s',
-          details: 'Multi-agent planning session completed'
-        },
-        {
-          phase: 'Governance Check',
-          status: 'complete',
-          duration: '1.2s',
-          details: 'LGPD compliance validated'
-        },
-        {
-          phase: 'Code & Build',
-          status: 'complete',
-          duration: '8m 47s',
-          details: 'All tests passed, security scans clear'
-        },
-        {
-          phase: 'Approval Gate',
-          status: 'complete',
-          duration: '2h 15m',
-          details: 'Approved by Jordan Kim'
-        },
-        {
-          phase: 'Production Deploy',
-          status: 'executing',
-          duration: '4m 12s...',
-          details: 'Rolling deployment in progress (67%)'
-        }
-      ]
-    },
-    {
-      id: 'orch-003',
-      title: 'Auth Service Dependency Update',
-      triggeredBy: 'Jordan Kim',
-      tool: 'VS Code Copilot',
+      title: 'Generate Cold-Start Tickets for Auth Modernization',
+      triggeredBy: 'Sarah Parker (PM)',
+      tool: 'ACP Engineering Council',
+      initiatedFrom: 'PM Hub',
       status: 'complete',
       phase: 'Complete',
       startTime: '2 hours ago',
-      systems: ['GitHub', 'Jenkins', 'OpenShift'],
-      impact: {
-        services: 1,
-        dependencies: 0,
-        users: '12,000',
-        risk: 'Low'
-      },
+      type: 'acp-workflow',
+      systems: ['ACP', 'Jira', 'Confluence', 'GitHub'],
+      context: 'PM idea: "Modernize auth service to support SSO"',
+      outcome: 'Epic EPIC-847 + 5 stories created, ready for sprint planning',
       steps: [
         {
-          phase: 'Context Analysis',
+          phase: 'AEP Context Retrieval',
           status: 'complete',
-          duration: '0.2s',
-          details: 'Service context retrieved'
+          duration: '1.2s',
+          details: 'Retrieved auth service architecture, team velocity, existing tickets'
+        },
+        {
+          phase: 'Engineering Council Session',
+          status: 'complete',
+          duration: '8m 34s',
+          details: 'AI agents validated idea, identified 8 technical constraints'
         },
         {
           phase: 'Governance Check',
           status: 'complete',
-          duration: '0.5s',
-          details: 'All checks passed'
+          duration: '0.4s',
+          details: 'RBAC: PM authorized to create epics, security policies checked'
         },
         {
-          phase: 'Code & Build',
+          phase: 'Jira Ticket Generation',
           status: 'complete',
-          duration: '1m 54s',
-          details: 'Build successful'
+          duration: '3.1s',
+          details: 'Created EPIC-847, 5 stories with acceptance criteria'
+        },
+        {
+          phase: 'Confluence Documentation',
+          status: 'complete',
+          duration: '2.8s',
+          details: 'Auto-generated technical spec and architecture doc'
+        }
+      ]
+    },
+    // Developer-initiated: Code → PR → CI → Deploy
+    {
+      id: 'orch-002',
+      title: 'Deploy Payment Retry Logic',
+      triggeredBy: 'Alex Chen (Developer)',
+      tool: 'VS Code (Web)',
+      initiatedFrom: 'AI Workspace',
+      status: 'awaiting-approval',
+      phase: 'Awaiting Approval',
+      startTime: '12 minutes ago',
+      type: 'deployment',
+      systems: ['GitHub', 'Jenkins', 'OpenShift'],
+      context: 'From Cold-Start Ticket: STORY-234 (Brazil Payment Gateway)',
+      outcome: 'Pending platform team approval for production deploy',
+      steps: [
+        {
+          phase: 'AEP Context Check',
+          status: 'complete',
+          duration: '0.8s',
+          details: 'Verified service ownership, dependencies, RBAC permissions'
+        },
+        {
+          phase: 'GitHub PR Creation',
+          status: 'complete',
+          duration: '1.2s',
+          details: 'PR #847 created with AEP-provided context (ticket link, reviewers)'
+        },
+        {
+          phase: 'CI Pipeline',
+          status: 'complete',
+          duration: '2m 47s',
+          details: 'Tests passed, security scan clear, code coverage 94%'
+        },
+        {
+          phase: 'Governance Check',
+          status: 'complete',
+          duration: '0.6s',
+          details: 'Deployment policy: Requires platform approval (high-impact service)'
         },
         {
           phase: 'Approval Gate',
-          status: 'complete',
-          duration: '8m',
-          details: 'Auto-approved (low risk)'
+          status: 'pending',
+          duration: '-',
+          details: 'Awaiting Jordan Kim (Platform Engineer) approval'
         },
         {
           phase: 'Production Deploy',
+          status: 'pending',
+          duration: '-',
+          details: 'Will deploy to OpenShift cluster (blue-green strategy)'
+        }
+      ]
+    },
+    // Platform Engineer-initiated: RBAC Policy Update
+    {
+      id: 'orch-003',
+      title: 'Update K8s RBAC Policies for Payment Services',
+      triggeredBy: 'Jordan Kim (Platform Engineer)',
+      tool: 'Custom Agent (K8s RBAC Specialist)',
+      initiatedFrom: 'AI Workspace',
+      status: 'complete',
+      phase: 'Complete',
+      startTime: '1 hour ago',
+      type: 'governance',
+      systems: ['Kubernetes', 'Ansible', 'GitHub'],
+      context: 'Security requirement: Enforce least-privilege access for payment services',
+      outcome: 'RBAC policies updated across 3 clusters, audit log generated',
+      steps: [
+        {
+          phase: 'AEP Context Retrieval',
           status: 'complete',
-          duration: '3m 22s',
-          details: 'Deployment successful'
+          duration: '0.6s',
+          details: 'Retrieved current RBAC configs, service accounts, security policies'
+        },
+        {
+          phase: 'Policy Validation',
+          status: 'complete',
+          duration: '4.2s',
+          details: 'K8s RBAC Specialist validated proposed changes against org standards'
+        },
+        {
+          phase: 'Governance Check',
+          status: 'complete',
+          duration: '0.3s',
+          details: 'RBAC: Platform engineer authorized, compliance rules checked'
+        },
+        {
+          phase: 'Apply to Clusters',
+          status: 'complete',
+          duration: '12.8s',
+          details: 'Updated rolebindings in dev, staging, prod clusters'
+        },
+        {
+          phase: 'Audit Trail',
+          status: 'complete',
+          duration: '1.1s',
+          details: 'Logged changes, notified security team'
+        }
+      ]
+    },
+    // Developer-initiated: Security Scan via Custom Agent
+    {
+      id: 'orch-004',
+      title: 'Security Review: Payment Gateway Code',
+      triggeredBy: 'Alex Chen (Developer)',
+      tool: 'Security Review Agent',
+      initiatedFrom: 'Developer Hub',
+      status: 'complete',
+      phase: 'Complete',
+      startTime: '3 hours ago',
+      type: 'security',
+      systems: ['GitHub', 'Security Scanner', 'Jira'],
+      context: 'Pre-PR security check requested by developer',
+      outcome: '2 medium-severity issues found, Jira tickets created for fixes',
+      steps: [
+        {
+          phase: 'AEP Context Retrieval',
+          status: 'complete',
+          duration: '0.9s',
+          details: 'Retrieved code changes, security policies, PCI-DSS requirements'
+        },
+        {
+          phase: 'Security Scan',
+          status: 'complete',
+          duration: '1m 23s',
+          details: 'Scanned for SQL injection, XSS, secrets, PCI-DSS compliance'
+        },
+        {
+          phase: 'Governance Check',
+          status: 'complete',
+          duration: '0.2s',
+          details: 'Findings categorized by severity, blocking issues flagged'
+        },
+        {
+          phase: 'Issue Creation',
+          status: 'complete',
+          duration: '2.4s',
+          details: 'Created JIRA-1234, JIRA-1235 with remediation guidance'
         }
       ]
     }
   ];
+
+  // Filter orchestrations by persona (show what's relevant to them)
+  const getOrchestrationsForPersona = () => {
+    if (persona.includes('Product Manager') || persona.includes('PM')) {
+      // PMs see: ACP workflows they initiated + high-level deployments
+      return allOrchestrations.filter(o => 
+        o.type === 'acp-workflow' || o.triggeredBy.includes('Sarah Parker')
+      );
+    }
+    if (persona.includes('Platform Engineer')) {
+      // Platform engineers see: governance, approvals, infrastructure
+      return allOrchestrations.filter(o => 
+        o.type === 'governance' || o.status === 'awaiting-approval' || o.triggeredBy.includes('Jordan Kim')
+      );
+    }
+    // Developers see: deployments, security scans, code-related
+    return allOrchestrations.filter(o => 
+      o.type === 'deployment' || o.type === 'security' || o.triggeredBy.includes('Alex Chen')
+    );
+  };
+
+  const orchestrations = getOrchestrationsForPersona();
 
   const getStatusConfig = (status) => {
     const configs = {
@@ -200,17 +266,17 @@ const Orchestrations = () => {
               <h1 className="text-3xl font-bold text-gray-900">Orchestrations</h1>
             </div>
             <p className="text-gray-600">
-              Multi-system workflows orchestrated across your enterprise
+              AI tools trigger multi-system workflows - AEP provides context, governance, and orchestration
             </p>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">3</div>
-              <div className="text-sm text-gray-600">Active</div>
+              <div className="text-2xl font-bold text-gray-900">{orchestrations.length}</div>
+              <div className="text-sm text-gray-600">Showing</div>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">47</div>
-              <div className="text-sm text-gray-600">This Week</div>
+              <div className="text-2xl font-bold text-gray-900">{allOrchestrations.length}</div>
+              <div className="text-sm text-gray-600">Total</div>
             </div>
           </div>
         </div>
@@ -231,7 +297,7 @@ const Orchestrations = () => {
               onClick={() => setSelectedOrch(selectedOrch === orch.id ? null : orch.id)}
             >
               {/* Orchestration Header */}
-              <div className="flex items-start justify-between mb-6">
+              <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">{orch.title}</h3>
@@ -240,9 +306,13 @@ const Orchestrations = () => {
                       {orch.phase}
                     </span>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>Triggered by <strong>{orch.triggeredBy}</strong></span>
-                    <span>via {orch.tool}</span>
+                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                    <span><strong>{orch.triggeredBy}</strong></span>
+                    <span>•</span>
+                    <span>{orch.tool}</span>
+                    <span>•</span>
+                    <span>{orch.initiatedFrom}</span>
+                    <span>•</span>
                     <span>{orch.startTime}</span>
                   </div>
                 </div>
@@ -251,29 +321,27 @@ const Orchestrations = () => {
                 }`} />
               </div>
 
-              {/* Systems & Impact */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <div className="text-xs text-gray-600 mb-1">Systems</div>
-                  <div className="text-sm font-semibold text-gray-900">
-                    {orch.systems.join(', ')}
+              {/* Context & Systems */}
+              <div className="space-y-3 mb-4">
+                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                  <div className="text-xs text-blue-600 font-medium mb-1">Context</div>
+                  <div className="text-sm text-blue-900">{orch.context}</div>
+                </div>
+                
+                {orch.outcome && (
+                  <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                    <div className="text-xs text-emerald-600 font-medium mb-1">Outcome</div>
+                    <div className="text-sm text-emerald-900">{orch.outcome}</div>
                   </div>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <div className="text-xs text-gray-600 mb-1">Services</div>
-                  <div className="text-lg font-bold text-gray-900">{orch.impact.services}</div>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <div className="text-xs text-gray-600 mb-1">Users Affected</div>
-                  <div className="text-lg font-bold text-gray-900">{orch.impact.users}</div>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <div className="text-xs text-gray-600 mb-1">Risk Level</div>
-                  <div className={`text-lg font-bold ${
-                    orch.impact.risk === 'Low' ? 'text-emerald-600' :
-                    orch.impact.risk === 'Medium' ? 'text-amber-600' :
-                    'text-red-600'
-                  }`}>{orch.impact.risk}</div>
+                )}
+
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs text-gray-600 font-medium">Systems:</span>
+                  {orch.systems.map((system, idx) => (
+                    <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                      {system}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -321,20 +389,6 @@ const Orchestrations = () => {
                     </div>
                   )}
 
-                  {orch.status === 'executing' && (
-                    <div className="mt-6">
-                      <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-                        <span>Deployment Progress</span>
-                        <span>67%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all animate-pulse"
-                          style={{ width: '67%' }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
@@ -346,9 +400,9 @@ const Orchestrations = () => {
       {orchestrations.length === 0 && (
         <div className="card-elevated p-12 text-center">
           <Zap className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Active Orchestrations</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Orchestrations for {persona}</h3>
           <p className="text-gray-600 mb-6">
-            Orchestrations will appear here when AI tools trigger multi-system workflows
+            When you or your team trigger AI workflows (ACP sessions, deployments, security scans), they'll appear here
           </p>
         </div>
       )}
@@ -357,4 +411,5 @@ const Orchestrations = () => {
 };
 
 export default Orchestrations;
+
 

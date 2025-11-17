@@ -123,6 +123,23 @@ Supports advanced AI workflows:
 
 **Communication compressed from 12 hours of meetings to 45 minutes of AI analysis.**
 
+## What's In This Prototype
+
+This prototype demonstrates the AEP vision through a fully-functional UI with:
+
+- ✅ **Multi-Persona Views** - Product Manager, Developer, Platform Engineer
+- ✅ **AI Workspace** - Use multiple AI tools side-by-side (Claude, Cursor, ACP, Gemini, etc.)
+- ✅ **Web-Based IDEs** - Embed VS Code, IntelliJ with AI extensions (Roo Code, Cursor AI)
+- ✅ **Persona Command Centers** - PM Hub and Developer Hub with role-specific workflows
+- ✅ **Real Orchestrations** - ACP workflows, deployments, governance, security scans
+- ✅ **Communication Compression Tracking** - See time/meetings saved
+- ✅ **Unified Context** - All tools get the same enterprise data (GitHub, Jira, RBAC)
+- ✅ **Custom Assistants** - K8s RBAC Specialist, Security Agent, Cost Optimizer
+- ✅ **Workspace Templates** - Save and share multi-tool configurations
+- ✅ **Governance & RBAC** - Policy enforcement, approval workflows, audit trails
+
+**Note**: This is a UI/UX prototype demonstrating the AEP vision. Backend integrations (GitHub API, Jira, Kubernetes, etc.) are represented with realistic mock data to show how the platform would function in production.
+
 ## Installation & Setup
 
 ### Prerequisites
@@ -130,6 +147,22 @@ Supports advanced AI workflows:
 - npm or yarn
 
 ### Quick Start
+
+**Option 1: Using the Setup Script (Recommended)**
+
+```bash
+# Clone the repository
+git clone https://github.com/rrbanda/agentic-experience-layer.git
+cd agentic-experience-layer
+
+# Make setup script executable
+chmod +x scripts/setup.sh
+
+# Run setup (installs dependencies and starts dev server)
+./scripts/setup.sh
+```
+
+**Option 2: Manual Setup**
 
 ```bash
 # Clone the repository
@@ -149,75 +182,163 @@ npm run build
 npm run preview
 ```
 
-The application will open at `http://localhost:3000`
+The application will open at `http://localhost:5173`
 
 ## Project Structure
 
 ```
-aep-prototype/
+agentic-experience-layer/
 ├── src/
-│   ├── App.jsx          # Main AEP component
-│   ├── main.jsx         # React entry point
-│   └── index.css        # Global styles with Tailwind
-├── index.html           # HTML template
-├── package.json         # Dependencies and scripts
-├── vite.config.js       # Vite configuration
-├── tailwind.config.js   # Tailwind CSS config
-└── README.md           # This file
+│   ├── App.jsx                    # Main application with routing
+│   ├── main.jsx                   # React entry point
+│   ├── index.css                  # Global styles with Tailwind
+│   ├── components/
+│   │   └── Layout.jsx             # Main layout with navigation & persona switcher
+│   └── pages/
+│       ├── Dashboard.jsx          # Organization overview
+│       ├── AIWorkspace.jsx        # Multi-tool AI workspace (tool juggling)
+│       ├── PMHub.jsx              # Product Manager command center
+│       ├── DeveloperHub.jsx       # Developer command center
+│       ├── Orchestrations.jsx     # Multi-system workflow orchestration
+│       ├── AgentCouncil.jsx       # Multi-agent collaboration
+│       ├── LiveActivity.jsx       # Real-time AI activity monitoring
+│       ├── ValueOutcomes.jsx      # Business value & metrics
+│       ├── Governance.jsx         # RBAC, policies, compliance
+│       ├── ConnectedSystems.jsx   # Enterprise integrations
+│       └── Settings.jsx           # Platform configuration
+├── docs/
+│   ├── DEPLOYMENT.md              # Deployment guide
+│   └── WHY_AEP_REPLACES_BACKSTAGE.md
+├── scripts/
+│   └── setup.sh                   # Quick setup script
+├── index.html                     # HTML template
+├── package.json                   # Dependencies and scripts
+├── vite.config.js                 # Vite configuration
+├── tailwind.config.js             # Tailwind CSS config
+├── postcss.config.js              # PostCSS configuration
+└── README.md                      # This file
 ```
+
+## Additional Documentation
+
+- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** - Comprehensive deployment guide for production environments
+- **[WHY_AEP_REPLACES_BACKSTAGE.md](docs/WHY_AEP_REPLACES_BACKSTAGE.md)** - Detailed comparison and positioning
 
 ## Features Demonstrated in the Prototype
 
-### Conversational Interface
-- Natural language interaction with enterprise systems
-- Context-aware AI responses with real organizational data
-- Multi-turn conversations with persistent context
+### Persona-Centric Experience
+- **Persona Switcher**: Toggle between Product Manager, Developer, and Platform Engineer views
+- **Role-Specific Dashboards**: Each persona sees relevant data, metrics, and actions
+- **Personalized Command Centers**: PM Hub and Developer Hub with tailored workflows
 
-### Enterprise Context Visualization
-- Real-time system status (services, incidents, deployments)
-- Connected systems dashboard (GitHub, Jira, K8s, etc.)
-- Service dependency graphs and ownership
+### Dashboard (Organization Overview)
+- **Your AI Tool Stack**: Visual representation of all AI tools in use (Cursor, Claude, ACP, etc.)
+- **Active ACP Sessions**: Real-time view of Engineering Council sessions and cold-start ticket generation
+- **Recent Completions**: Track shipped features, deployments, and governance updates
+- **Internal Context**: Quick access to Jira, GitHub, Confluence, architecture docs
+- **Communication Compression Metrics**: Time saved by eliminating meetings
 
-### Governance & Policy Enforcement
-- RBAC validation before any action
-- Compliance checking (SOC2, PCI-DSS, GDPR)
-- Security scanning and vulnerability detection
-- Approval workflows for production changes
+### AI Workspace (Tool Juggling)
+- **Multi-Tool Interface**: Use multiple AI assistants side-by-side (Claude, Cursor, Gemini, ACP)
+- **Web-Based IDEs**: Embed VS Code, IntelliJ, Eclipse Che with AI extensions (Roo Code, Cursor AI)
+- **Unified Context**: All tools get the same enterprise context (GitHub, Jira, RBAC, policies)
+- **Workspace Templates**: Save and share multi-tool configurations for specific workflows
+- **Discovery Platform**: Browse public AI tools and custom organizational assistants
+- **Custom Assistants**: K8s RBAC Specialist, Security Review Agent, Cloud Cost Optimizer, etc.
 
-### Multi-System Orchestration
-- Visual orchestration plan showing all steps
-- Context Analysis → Governance → Planning → Approval → Execution
-- Impact analysis (affected services, dependencies, users)
-- Automated rollback capabilities
+### PM Hub (Product Manager Command Center)
+- **Start Your Work**: Engineering Council sessions, cold-start ticket generation, architecture reviews
+- **ACP Integration**: Transform ideas into ready-to-code epics in under an hour
+- **Communication Compression**: Eliminate kickoff meetings, requirement clarifications, and sprint planning debates
 
-### Active Agent Monitoring
-- Real-time agent activity tracking
-- Specialized agents (Context Analyzer, Governance Agent, ACP Planner)
-- Agent task status and idle/active states
+### Developer Hub (Developer Command Center)
+- **Start Your Work**: Security analysis, technical debt review, code quality checks
+- **Cold-Start Tickets**: Receive fully scoped stories with acceptance criteria
+- **AI-Assisted Development**: Launch IDEs and assistants pre-loaded with project context
 
-## Demo Scenarios
+### Orchestrations (Multi-System Workflows)
+- **Real Orchestration Types**: ACP workflows, code deployments, governance updates, security scans
+- **Persona-Filtered Views**: See orchestrations relevant to your role
+- **Context & Outcomes**: Explicit demonstration of AEP's value in each workflow
+- **Multi-Phase Execution**: Context → Governance → Approval → Execution
+- **Communication Compression Tracking**: Show time saved (e.g., "0 meetings needed")
 
-Try these prompts in the prototype:
+### Agent Council (Multi-Agent Collaboration)
+- **Engineering Council**: Solutions Architect, Security Agent, Platform Engineer, Business Analyst
+- **Specialized Agents**: Domain-specific experts that understand your organization
+- **Collaborative Analysis**: Multi-agent discussions to validate ideas and identify constraints
+- **Custom Agent Creation**: Build and deploy organizational agents (coming soon)
 
-1. **"Deploy payment service to production with compliance checks"**
-   - See full orchestration across systems
-   - Governance validation
-   - Approval workflow
+### Live Activity
+- **Real-Time Monitoring**: Track all AI activity across your organization
+- **Agent Status**: See which agents are active, idle, or processing
+- **Audit Trail**: Full traceability of AI actions and decisions
 
-2. **"Analyze service dependencies for customer-api"**
-   - Enterprise context retrieval
-   - Dependency graph analysis
-   - Impact assessment
+### Value & Outcomes
+- **Business Metrics**: ROI, velocity improvements, time-to-market acceleration
+- **Communication Compression**: Meetings eliminated, hours saved
+- **Quality Metrics**: Defect reduction, compliance adherence, security posture
 
-3. **"Create new microservice following our architecture standards"**
-   - Architecture pattern enforcement
-   - Template generation with compliance
-   - Multi-step orchestration
+### Governance
+- **RBAC Management**: Role-based access control for all personas and agents
+- **Policy Enforcement**: Automated compliance checking (SOC2, PCI-DSS, GDPR)
+- **Approval Workflows**: Production change gates with proper authorization
+- **Audit Logging**: Complete traceability of all actions
 
-4. **"Fix the P1 incident in checkout service"**
-   - Observability integration
-   - Root cause analysis
-   - Automated remediation plan
+### Connected Systems
+- **Enterprise Integrations**: GitHub, Jira, Kubernetes, Jenkins, Ansible, Terraform
+- **System Health**: Real-time status of connected platforms
+- **API Management**: Unified access layer for all enterprise systems
+
+## Exploring the Prototype
+
+### Getting Started
+1. **Choose Your Persona**: Use the dropdown in the top-right to switch between Product Manager, Developer, or Platform Engineer
+2. **Explore the Dashboard**: See your AI tool stack, active ACP sessions, and communication compression metrics
+3. **Visit Your Command Center**: Go to PM Hub or Developer Hub to see persona-specific workflows
+
+### Key User Journeys to Try
+
+#### 1. Product Manager Journey (Communication Compression)
+- Switch persona to **Product Manager**
+- Navigate to **PM Hub** → Click "Engineering Council Session"
+- See how an idea transforms into cold-start tickets in under an hour
+- Check **Orchestrations** → Filter for ACP workflows
+- View **Value & Outcomes** → See meetings eliminated and time saved
+
+#### 2. Developer Journey (Cold-Start Coding)
+- Switch persona to **Developer**
+- Navigate to **Developer Hub** → Explore "Start Your Work" actions
+- Go to **AI Workspace** → Browse the Assistant Library
+- Add VS Code (Web) + ACP + Security Review Agent
+- See how all tools get unified context (STORY-234, payment-service repo)
+- Check **Orchestrations** → View deployment workflows with governance
+
+#### 3. Platform Engineer Journey (Governance & Infrastructure)
+- Switch persona to **Platform Engineer**
+- Navigate to **Orchestrations** → See approval gates for deployments
+- Go to **AI Workspace** → Add K8s RBAC Specialist + Cost Optimizer
+- Check **Governance** → View RBAC policies and compliance rules
+- Explore **Connected Systems** → See enterprise integrations
+
+#### 4. Multi-Tool AI Workspace (Tool Juggling)
+- Navigate to **AI Workspace**
+- Click **Browse Library** to discover:
+  - **IDEs**: VS Code, IntelliJ, Eclipse Che (with AI extensions)
+  - **Public Assistants**: Claude, Gemini, Cursor, Copilot
+  - **Custom Assistants**: ACP, Security Agent, RBAC Specialist
+- Add up to 3 tools and see them work side-by-side
+- Notice the live **Context Sync** indicator showing unified AEP context
+- Save your workspace as a template for future reuse
+
+#### 5. Orchestrations (See AEP's Real Value)
+- Navigate to **Orchestrations**
+- Explore different workflow types:
+  - **ACP Workflow**: PM idea → cold-start tickets (0 meetings needed)
+  - **Deployment**: Code → PR → CI → Approval → Deploy
+  - **Governance**: RBAC policy updates with validation
+  - **Security**: Pre-PR security scans with Jira ticket creation
+- Click into any orchestration to see AEP's role in each phase
 
 ## Technology Stack
 
